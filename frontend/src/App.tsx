@@ -4,6 +4,7 @@ import { ConfigProvider, theme, Button, Card, Layout } from "antd";
 import { useToggle } from './hooks/useToggle';
 import { Content, Header } from 'antd/es/layout/layout';
 import { StyledHeader } from './components/design/layout/Header';
+import { AboutPage } from './components/About/AboutPage';
 
 // import About from './components/About';
 // import Projects from './components/Projects';
@@ -22,7 +23,8 @@ const App = () => {
           <Content>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              {/* <Route path="/about" element={<About />} />
+              <Route path="/about" element={<AboutPage />} />
+              {/* 
                   <Route path="/projects" element={<Projects />} />
                   <Route path="/contact" element={<Contact />} /> */}
             </Routes>
