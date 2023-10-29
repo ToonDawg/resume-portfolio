@@ -1,15 +1,24 @@
 body {
-    background-color: black;
-    margin: 0;
+  margin: 0;
 }
 
 #root {
-    min-height: 100vh;
+  overflow: hidden;
 }
 
 @font-face {
-    font-family: 'Pacifico';
-    src: url('./components/design/Typography/Pacifico-Regular.ttf') format('truetype');
-  }
-  
-  
+  font-family: "Pacifico";
+  src: url("./components/design/Typography/Pacifico-Regular.ttf")
+    format("truetype");
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}

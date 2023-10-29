@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useRef } from "react";
 import styled from "styled-components";
 import {
   Avatar,
@@ -6,9 +6,9 @@ import {
   Typography,
   Space,
   Col,
-  Statistic,
-  Card,
   Timeline,
+  Card,
+  Row,
 } from "antd";
 import {
   MailOutlined,
@@ -18,97 +18,20 @@ import {
 import useCopyToClipboard from "../../hooks/useCopyToClipboard";
 import { ImageContainter } from "../design/Images";
 const { Text, Title } = Typography;
-import { Grid } from "antd";
+import ReactSVGIcon from "../../assets/react.svg";
+import AzureSVGIcon from "../../assets/azure.svg";
+import CSharpSVGIcon from "../../assets/CSharpDark.svg";
 
-const { useBreakpoint } = Grid;
+import { CSSTransition } from "react-transition-group";
+import Meta from "antd/es/card/Meta";
 
-const SplitLayout = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 10px;
-  padding: 50px;
-  height: 80vh;
-
-  @media (max-width: 950px) {
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-`;
-
-const HalfLayoutChild = styled.div`
-  flex: 1;
-  text-align: center;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-`;
-
-const StyledCol = styled(Col)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  justify-content: space-between;
-  gap: 30px;
-`;
-
-const StyledCard = styled.div`
-  border: 1px solid;
-  border-radius: 10px;
-  padding: 10px;
-`;
-const Header = styled(Title)`
-  font-family: "Pacifico", cursive;
-  font-size: 6rem !important;
-  text-align: center;
-  margin: 0 !important;
-
-  @media (max-width: 768px) {
-    font-size: 4rem !important;
-  }
-`;
-
-const HighlightedName = styled.span`
-  color: #c74734;
-  font-family: "Pacifico", cursive;
-  font-size: 6rem;
-  margin: 0;
-`;
-
-const StyledAvatar = styled(Avatar)`
-  background: #c74734;
-  cursor: pointer;
-`;
-
-const StyledSkillsTime = styled.div`
-  display: flex;
-  gap: 50px;
-  justify-content: center;
-
-  @media (max-width: 768px) {
-    gap: 5px;
-  }
-`;
-
-const StyledH3 = styled.h3`
-  margin: 0;
-`;
-
-const TimelineContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
-`;
-
-const calculateTime = (year: number): string => {
+const calculateTime = (year: number, month: number = 0): string => {
   const dateNow = new Date();
   const currentYear = dateNow.getFullYear();
   const currentMonth = dateNow.getMonth();
 
   const yearDifference = currentYear - year;
-  const monthDifference = currentMonth / 12;
+  const monthDifference = (currentMonth - month) / 12;
 
   const totalDifference = yearDifference + monthDifference;
 
@@ -118,11 +41,22 @@ const calculateTime = (year: number): string => {
 export const HomePage = (): ReactElement => {
   const [copiedPhone, copyPhone] = useCopyToClipboard("0423 032 877");
   const [copiedEmail, copyEmail] = useCopyToClipboard("tunoajohnson@gmail.com");
+  const nodeRef = useRef(null);
+
   return (
     <Col>
       <SplitLayout>
         <HalfLayoutChild>
-          <ImageContainter src="src/assets/headshot.png" />
+          <CSSTransition
+            appear
+            in
+            timeout={300}
+            classNames="fade"
+            unmountOnExit
+            nodeRef={nodeRef}
+          >
+            <ImageContainter ref={nodeRef} src="src/assets/headshot.png" />
+          </CSSTransition>
         </HalfLayoutChild>
         <HalfLayoutChild>
           <StyledCol>
@@ -170,23 +104,27 @@ export const HomePage = (): ReactElement => {
             get in touch if you're interested in working together!
           </Text>
           <StyledSkillsTime>
-            <Card bordered={false}>
-              <Statistic
-                title="C# | .Net"
-                value={calculateTime(2020)}
-                suffix="yrs"
-              />
-            </Card>
-            <Card bordered={false}>
-              <Statistic
-                title="React"
-                value={calculateTime(2021)}
-                suffix="yrs"
-              />
-            </Card>
-            <Card bordered={false}>
-              <Statistic title="SQL" value={calculateTime(2020)} suffix="yrs" />
-            </Card>
+            <SkillsCard>
+              <img alt="svgImg" src={CSharpSVGIcon} />
+              <Title level={3}>
+                {calculateTime(2020)}
+                <Text style={{ fontSize: 10 }}>Yrs</Text>
+              </Title>
+            </SkillsCard>
+            <SkillsCard>
+              <img alt="svgImg" src={ReactSVGIcon} />
+              <Title level={3}>
+                {calculateTime(2021, 6)}
+                <Text style={{ fontSize: 10 }}>Yrs</Text>
+              </Title>
+            </SkillsCard>
+            <SkillsCard>
+              <img alt="svgImg" src={AzureSVGIcon} />
+              <Title level={3}>
+                {calculateTime(2020)}
+                <Text style={{ fontSize: 10 }}>Yrs</Text>
+              </Title>
+            </SkillsCard>
           </StyledSkillsTime>
         </HalfLayoutChild>
       </SplitLayout>
@@ -281,9 +219,120 @@ export const HomePage = (): ReactElement => {
           ]}
         />
       </TimelineContainer>
-      <div>
+      <div style={{ minHeight: "80vh" }}>
         <Header>Check out my Work!</Header>
+        <Row justify="space-evenly">
+          <a href="https://github.com/ToonDawg/ESP-Zone-Controller" target="_blank" rel="noopener noreferrer">
+            <WorkItemCard
+              hoverable
+              cover={<img alt="example" src="src/assets/acclimate.webp" />}
+            >
+              <Meta
+                title="Acclimate"
+                description="Air-Conditioner Zone Controller - React Native together with ESP32 IoT for enhanced and affordable Comfort Control."
+              />
+            </WorkItemCard>
+          </a>
+        </Row>
       </div>
     </Col>
   );
 };
+
+const WorkItemCard = styled(Card)`
+  max-width: 400px;
+  border: 3px solid white;
+  margin: 30px;
+`;
+
+const SplitLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  padding: 50px;
+  height: 80vh;
+
+  @media (max-width: 950px) {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    height: 100%;
+  }
+`;
+
+const HalfLayoutChild = styled.div`
+  flex: 1;
+  text-align: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledCol = styled(Col)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: space-between;
+  gap: 30px;
+`;
+
+const StyledCard = styled.div`
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 10px;
+`;
+const Header = styled(Title)`
+  font-family: "Pacifico", cursive;
+  font-size: 6rem !important;
+  text-align: center;
+  margin: 0 !important;
+
+  @media (max-width: 768px) {
+    font-size: 4rem !important;
+  }
+`;
+
+const HighlightedName = styled.span`
+  color: #c74734;
+  font-family: "Pacifico", cursive;
+  font-size: 6rem;
+  margin: 0;
+`;
+
+const StyledAvatar = styled(Avatar)`
+  background: #c74734;
+  cursor: pointer;
+`;
+
+const StyledSkillsTime = styled.div`
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+  }
+`;
+
+const StyledH3 = styled.h3`
+  margin: 0;
+`;
+
+const TimelineContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  min-height: 80vh;
+
+  @media (max-width: 768px) {
+    height: 100%;
+  }
+`;
+
+const SkillsCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+`;
