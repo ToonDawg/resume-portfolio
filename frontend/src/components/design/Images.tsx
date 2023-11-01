@@ -35,7 +35,7 @@ const StyledFigure = styled.div`
   }
 `;
 
-export const ImageContainter = ({ src, ref }: { src: string, ref: React.MutableRefObject<null> }) => (
+export const ImageContainter = ({ src, ref }: { src: string, ref?: React.MutableRefObject<null> }) => (
     <StyledFigure>
         <StyledImageGreyScale src={src} ref={ref} />
     </StyledFigure>
